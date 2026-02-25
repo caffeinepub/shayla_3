@@ -1,0 +1,29 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-25T12:35:45.176Z",
+  "summary": "The diff implements both REQ-32 (Back to Home button) and REQ-33 (Clear button) in ContentGeneratorPage.tsx. The Back to Home button uses TanStack Router's useNavigate, and the Clear button resets all relevant state and auto-focuses the URL input. Most acceptance criteria appear to be met, but there is insufficient evidence for file upload/preview clearing since the diff is truncated and no free-text area reset is explicitly visible in the truncated portion.",
+  "missing_requirements": [
+    {
+      "requirement": "Clicking 'Clear' removes any uploaded file previews and clears the file input state",
+      "reason": "The truncated diff does not show a file upload state variable or its reset in handleClear. The file summary only mentions 'resets all state (URL, content, errors, progress)' without explicitly confirming file upload state reset.",
+      "evidence": [
+        "frontend/src/pages/ContentGeneratorPage.tsx"
+      ]
+    },
+    {
+      "requirement": "Clicking 'Clear' resets the free-text input area to empty",
+      "reason": "No free-text input state variable is visible in the truncated diff, and handleClear does not show resetting such a field. The file summary does not explicitly mention a free-text reset either.",
+      "evidence": [
+        "frontend/src/pages/ContentGeneratorPage.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.72,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/pages/ContentGeneratorPage.tsx",
+    "project_state.json"
+  ]
+}

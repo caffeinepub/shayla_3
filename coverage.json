@@ -1,0 +1,48 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-25T12:35:45.179Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-32",
+        "summary": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ContentGeneratorPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ContentGeneratorPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-33",
+        "summary": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ContentGeneratorPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ContentGeneratorPage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/pages/ContentGeneratorPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

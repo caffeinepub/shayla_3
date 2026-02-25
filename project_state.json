@@ -1,0 +1,381 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 15,
+  "summary": "Multi-tile luxury app (Shayla) with neon effects for content generation (product link analysis, SEO-optimized text for website/Instagram/Ita), product management, affiliate marketing, and settings with full customization. Golden Shayla logo displayed throughout.",
+  "architectural_notes": [
+    "App must work without VPN on slow Iranian internet connections",
+    "Neon border animation: rotating single-color light that cycles through colors (each color blinks when finishing its cycle)",
+    "Content generator output must be structured for Digify free plan product registration fields",
+    "Sale price = purchase price × 1.4 (auto-calculated)",
+    "Generated SEO content must be specifically optimized for shylaa.ir — titles, descriptions, tags, and keywords should target shylaa.ir's niche and audience",
+    "Content generator must handle all link/input types universally: e-commerce sites (Digikala, Basalam, Torob, shylaa.ir, etc.), social media, file URLs, and any other web source — fallback parsing required when direct extraction fails"
+  ],
+  "known_issues": [
+    "Content generator not producing URL-relevant content — output is not tied to actual product data extracted from the link",
+    "Deployment errors encountered — backend proxy and Motoko compilation issues caused build failures; Version 2 deployed as a stable fallback",
+    "Settings tile: changes made by the user are not being applied — settings save/apply flow is broken"
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-multi-tile-home-screen-layout-with-4-tiles-1-content-generator-2-products-3-affiliate-marketing-4-settings-each-tile-must-have-a-distinct-icon-and-label-the-content-generator-tile-must-feature-an-animated-particle-burst-scatter-effect-when-clicked-transitioning-the-user-into-that-section",
+      "title": "Create a multi-tile home screen layout with 4 tiles: (1) Content Generator, (2) Products, (3) Affiliate Marketing, (4) Settings. Each tile must have a distinct icon and label. The Content Generator tile must feature an animated particle burst/scatter effect when clicked, transitioning the user into that section.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-continuously-animated-neon-light-border-around-the-entire-screen-app-frame-the-animation-must-cycle-through-distinct-colors-one-at-a-time-e-g-yellow-purple-violet-cyan-pink-etc-travel-around-the-rectangular-border-as-a-glowing-linear-strip-and-blink-flash-once-at-the-end-of-each-full-rotation-before-switching-to-the-next-color-each-color-completes-one-full-loop-around-the-frame-before-transitioning",
+      "title": "Implement a continuously animated neon light border around the entire screen/app frame. The animation must: cycle through distinct colors one at a time (e.g., yellow, purple/violet, cyan, pink, etc.), travel around the rectangular border as a glowing linear strip, and blink/flash once at the end of each full rotation before switching to the next color. Each color completes one full loop around the frame before transitioning.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-modern-classic-luxury-and-soothing-visual-theme-throughout-the-app-use-a-dark-elegant-background-deep-navy-or-near-black-gold-champagne-accent-colors-soft-neon-glows-on-interactive-elements-refined-typography-and-smooth-subtle-transitions-the-overall-feel-must-be-calm-premium-and-visually-cohesive",
+      "title": "Apply a modern, classic, luxury, and soothing visual theme throughout the app. Use a dark elegant background (deep navy or near-black), gold/champagne accent colors, soft neon glows on interactive elements, refined typography, and smooth subtle transitions. The overall feel must be calm, premium, and visually cohesive.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-shayla-golden-logo-prominently-in-the-app-header-home-screen-the-logo-should-be-gold-colored-and-reference-the-brand-identity-from-shylaa-ir-if-a-fetched-logo-is-unavailable-render-a-stylized-gold-text-logo-with-a-golden-glow-effect",
+      "title": "Display the Shayla (شایلا) golden logo prominently in the app header/home screen. The logo should be gold-colored and reference the brand identity from shylaa.ir. If a fetched logo is unavailable, render a stylized gold text logo 'شایلا' with a golden glow effect.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-content-generator-tile-tile-1-inside-this-section-provide-a-a-text-input-field-for-entering-a-product-url-link-b-an-optional-image-upload-input-c-an-optional-audio-upload-input-d-an-optional-free-text-input-area-and-e-a-prominent-generate-content-button-on-submission-the-app-must-parse-analyze-the-provided-url-and-any-additional-inputs-to-extract-product-information-title-price-images-description-specifications",
+      "title": "Build the Content Generator tile (Tile 1). Inside this section, provide: (a) a text input field for entering a product URL/link, (b) an optional image upload input, (c) an optional audio upload input, (d) an optional free-text input area, and (e) a prominent 'Generate Content' (ایجاد محتوا) button. On submission, the app must parse/analyze the provided URL and any additional inputs to extract product information (title, price, images, description, specifications).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-analyzing-the-product-url-generate-structured-seo-optimized-content-output-displayed-in-this-exact-order-1-seo-title-strong-competitive-ranking-optimized-for-google-vs-top-iranian-e-commerce-sites-2-purchase-price-extracted-from-the-link-3-sale-price-purchase-price-40-4-full-product-description-persuasive-purchase-encouraging-detailed-with-powerful-keywords-5-supplementary-specs-any-realistic-specs-not-found-in-the-link-but-relevant-to-the-product-6-product-specifications-extracted-from-the-link-7-tags-keywords-powerful-seo-tags-targeting-all-potential-buyers-from-google-and-other-search-engines-each-section-must-be-individually-copyable-and-there-must-be-a-copy-all-button-for-the-entire-output",
+      "title": "After analyzing the product URL, generate structured SEO-optimized content output displayed in this exact order: (1) SEO Title — strong, competitive, ranking-optimized for Google vs top Iranian e-commerce sites; (2) Purchase Price — extracted from the link; (3) Sale Price — purchase price + 40%; (4) Full Product Description — persuasive, purchase-encouraging, detailed, with powerful keywords; (5) Supplementary Specs — any realistic specs not found in the link but relevant to the product; (6) Product Specifications — extracted from the link; (7) Tags & Keywords — powerful SEO tags targeting all potential buyers from Google and other search engines. Each section must be individually copyable AND there must be a 'Copy All' button for the entire output.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-platform-switcher-dropdown-above-the-generated-content-output-options-website-digify-instagram-ita-and-blog-article-when-the-user-selects-a-platform-the-displayed-content-reformats-to-match-that-platform-s-conventions-and-character-limits-each-platform-variant-must-also-be-individually-copyable",
+      "title": "Add a platform switcher dropdown above the generated content output. Options: Website (Digify / دیجی‌فای), Instagram (اینستاگرام), Ita (ایتا), and Blog/Article (مقاله و بلاگ). When the user selects a platform, the displayed content reformats to match that platform's conventions and character limits. Each platform variant must also be individually copyable.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-all-generated-content-to-the-backend-with-full-history-storage-each-history-entry-must-store-the-source-url-input-timestamp-generated-content-for-all-platforms-and-any-user-notes-the-history-section-must-be-accessible-within-the-content-generator-tile-and-allow-the-user-to-reopen-and-reuse-any-past-generation-session",
+      "title": "Persist all generated content to the backend with full history storage. Each history entry must store: the source URL, input timestamp, generated content for all platforms, and any user notes. The history section must be accessible within the Content Generator tile and allow the user to reopen and reuse any past generation session.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-products-tile-tile-2-as-a-product-management-section-where-the-user-can-upload-view-edit-and-delete-store-products-each-product-entry-should-include-name-purchase-price-sale-price-description-images-specifications-and-tags-products-must-be-stored-in-the-backend",
+      "title": "Build the Products tile (Tile 2) as a product management section where the user can upload, view, edit, and delete store products. Each product entry should include: name, purchase price, sale price, description, images, specifications, and tags. Products must be stored in the backend.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-affiliate-marketing-tile-tile-3-as-a-dedicated-section-for-managing-affiliate-reseller-partnerships-include-basic-structure-affiliate-link-display-commission-tracking-fields-and-partner-notes-this-is-a-foundational-scaffold-for-future-expansion",
+      "title": "Build the Affiliate Marketing tile (Tile 3) as a dedicated section for managing affiliate/reseller partnerships. Include basic structure: affiliate link display, commission tracking fields, and partner notes. This is a foundational scaffold for future expansion.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-settings-tile-tile-4-with-a-clearly-visible-gear-icon-the-settings-panel-must-allow-customization-of-a-ui-theme-accent-color-font-size-dark-light-mode-toggle-b-content-generation-preferences-default-tone-language-output-style-c-app-behavior-settings-default-platform-for-content-auto-save-preference-and-d-technical-settings-all-settings-must-be-saved-to-the-backend-and-applied-instantly-when-the-user-clicks-the-save-button-without-requiring-a-page-reload",
+      "title": "Build the Settings tile (Tile 4) with a clearly visible gear icon (⚙). The settings panel must allow customization of: (a) UI theme (accent color, font size, dark/light mode toggle), (b) content generation preferences (default tone, language, output style), (c) app behavior settings (default platform for content, auto-save preference), and (d) technical settings. All settings must be saved to the backend and applied instantly when the user clicks the 'Save' (ذخیره) button without requiring a page reload.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-optimize-the-entire-frontend-for-low-bandwidth-and-slow-internet-conditions-typical-in-iran-without-requiring-a-vpn-this-means-minimize-javascript-bundle-size-lazy-load-non-critical-sections-tiles-avoid-external-cdn-dependencies-for-critical-resources-compress-all-assets-and-ensure-the-app-is-functional-on-connections-as-slow-as-1-2-mbps-with-no-timeouts-on-normal-interactions",
+      "title": "Optimize the entire frontend for low-bandwidth and slow internet conditions typical in Iran (without requiring a VPN). This means: minimize JavaScript bundle size, lazy-load non-critical sections/tiles, avoid external CDN dependencies for critical resources, compress all assets, and ensure the app is functional on connections as slow as 1–2 Mbps with no timeouts on normal interactions.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-stub-generic-content-generation-logic-in-frontend-src-utils-contentgenerator-ts-with-a-real-url-aware-extraction-pipeline-1-fetch-the-provided-product-url-via-a-backend-proxy-to-avoid-cors-2-parse-the-raw-html-response-to-extract-product-title-price-images-description-and-specifications-using-dom-regex-parsing-3-if-direct-fetching-is-not-possible-fall-back-to-intelligent-url-pattern-parsing-e-g-digikala-basalam-torob-shylaa-ir-slug-query-patterns-to-derive-plausible-product-metadata-4-ensure-the-extracted-data-is-passed-as-structured-input-to-the-seo-content-generator-so-all-generated-sections-title-description-specs-tags-directly-reflect-the-actual-product-found-at-the-url",
+      "title": "Replace the current stub/generic content generation logic in `frontend/src/utils/contentGenerator.ts` with a real URL-aware extraction pipeline: (1) Fetch the provided product URL via a backend proxy (to avoid CORS), (2) Parse the raw HTML response to extract product title, price, images, description, and specifications using DOM/regex parsing, (3) If direct fetching is not possible, fall back to intelligent URL-pattern parsing (e.g., Digikala, Basalam, Torob, Shylaa.ir slug/query patterns) to derive plausible product metadata, (4) Ensure the extracted data is passed as structured input to the SEO content generator so all generated sections (title, description, specs, tags) directly reflect the actual product found at the URL.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-seo-content-generation-logic-in-frontend-src-utils-contentgenerator-ts-and-frontend-src-utils-platformformatters-ts-to-produce-output-specifically-tailored-for-shylaa-ir-1-seo-titles-must-competitively-target-google-rankings-against-top-iranian-e-commerce-sites-digikala-basalam-torob-using-the-actual-product-name-extracted-from-the-url-2-descriptions-must-include-natural-persian-keyword-phrases-that-match-how-iranian-shoppers-search-for-the-product-3-tags-keywords-must-include-product-specific-terms-derived-from-the-url-content-plus-shylaa-ir-brand-context-e-g-product-product-4-all-generated-text-must-be-in-fluent-natural-persian-farsi-with-correct-grammar",
+      "title": "Update the SEO content generation logic in `frontend/src/utils/contentGenerator.ts` and `frontend/src/utils/platformFormatters.ts` to produce output specifically tailored for shylaa.ir: (1) SEO titles must competitively target Google rankings against top Iranian e-commerce sites (Digikala, Basalam, Torob) using the actual product name extracted from the URL, (2) Descriptions must include natural Persian keyword phrases that match how Iranian shoppers search for the product, (3) Tags & Keywords must include product-specific terms derived from the URL content plus shylaa.ir brand context (e.g., 'خرید [product] از شایلا', 'قیمت [product] شایلا'), (4) All generated text must be in fluent, natural Persian (Farsi) with correct grammar.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-visible-fetching-product-data-loading-state-in-frontend-src-pages-contentgeneratorpage-tsx-while-the-url-is-being-fetched-and-parsed-and-display-a-descriptive-error-state-if-the-url-is-unreachable-or-no-product-data-can-be-extracted-the-error-message-must-guide-the-user-to-check-the-url-or-add-manual-product-details-in-the-free-text-field-as-a-fallback",
+      "title": "Add a visible 'Fetching product data…' loading state in `frontend/src/pages/ContentGeneratorPage.tsx` while the URL is being fetched and parsed, and display a descriptive error state if the URL is unreachable or no product data can be extracted. The error message must guide the user to check the URL or add manual product details in the free-text field as a fallback.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-frontend-src-utils-contentgenerator-ts-to-accept-and-process-any-type-of-url-or-input-source-including-but-not-limited-to-iranian-e-commerce-sites-digikala-basalam-torob-shylaa-ir-snapp-shop-emalls-sheypoor-international-e-commerce-sites-amazon-ebay-aliexpress-alibaba-social-media-post-urls-instagram-telegram-aparat-youtube-blog-article-pages-news-sites-and-generic-web-pages-for-each-input-type-attempt-html-fetch-via-cors-proxy-first-then-fall-back-to-url-pattern-slug-based-extraction-the-extraction-must-never-return-an-empty-or-failed-result-if-no-structured-data-is-found-derive-plausible-product-metadata-from-the-url-slug-query-string-or-domain-context-and-surface-it-as-a-partial-result-with-a-user-visible-note-indicating-it-was-inferred",
+      "title": "Extend `frontend/src/utils/contentGenerator.ts` to accept and process any type of URL or input source — including but not limited to: Iranian e-commerce sites (Digikala, Basalam, Torob, Shylaa.ir, Snapp Shop, Emalls, Sheypoor), international e-commerce sites (Amazon, eBay, AliExpress, Alibaba), social media post URLs (Instagram, Telegram, Aparat, YouTube), blog/article pages, news sites, and generic web pages. For each input type, attempt HTML fetch via CORS proxy first, then fall back to URL-pattern/slug-based extraction. The extraction must never return an empty or failed result — if no structured data is found, derive plausible product metadata from the URL slug, query string, or domain context and surface it as a partial result with a user-visible note indicating it was inferred.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-support-for-file-based-inputs-in-frontend-src-pages-contentgeneratorpage-tsx-a-image-files-jpg-png-webp-display-a-preview-and-use-the-filename-and-any-exif-alt-data-as-product-metadata-hints-b-audio-files-mp3-wav-ogg-accept-the-upload-and-note-the-file-name-as-a-product-reference-in-the-generated-content-c-text-files-txt-pdf-via-text-extraction-read-the-file-contents-and-pass-them-as-free-text-input-to-the-content-generator-d-any-other-file-type-accept-the-upload-extract-the-filename-and-use-it-as-a-product-name-seed-no-uploaded-file-type-should-produce-a-failure-all-must-contribute-to-the-generation-pipeline",
+      "title": "Add support for file-based inputs in `frontend/src/pages/ContentGeneratorPage.tsx`: (a) Image files (JPG, PNG, WEBP) — display a preview and use the filename and any EXIF/alt data as product metadata hints; (b) Audio files (MP3, WAV, OGG) — accept the upload and note the file name as a product reference in the generated content; (c) Text files (TXT, PDF via text extraction) — read the file contents and pass them as free-text input to the content generator; (d) Any other file type — accept the upload, extract the filename, and use it as a product name seed. No uploaded file type should produce a failure; all must contribute to the generation pipeline.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-dedicated-url-parsers-in-frontend-src-utils-contentgenerator-ts-for-the-following-additional-iranian-and-international-platforms-that-are-not-yet-covered-sheypoor-sheypoor-com-snapp-shop-snapp-market-emalls-emalls-ir-aparat-aparat-com-extract-video-title-description-telegram-public-channel-post-urls-t-me-extract-message-text-and-any-url-containing-standard-open-graph-meta-tags-og-title-og-description-og-image-og-price-open-graph-parsing-must-be-used-as-the-universal-fallback-for-any-site-that-does-not-have-a-dedicated-parser",
+      "title": "Add dedicated URL parsers in `frontend/src/utils/contentGenerator.ts` for the following additional Iranian and international platforms that are not yet covered: Sheypoor (sheypoor.com), Snapp Shop (snapp.market), Emalls (emalls.ir), Aparat (aparat.com — extract video title/description), Telegram public channel post URLs (t.me — extract message text), and any URL containing standard Open Graph meta tags (`og:title`, `og:description`, `og:image`, `og:price`). Open Graph parsing must be used as the universal fallback for any site that does not have a dedicated parser.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-pages-contentgeneratorpage-tsx-to-display-a-multi-stage-progress-indicator-during-content-extraction-that-shows-the-current-extraction-step-in-persian-1-fetching-link-data-2-analyzing-page-content-3-generating-seo-content-if-a-step-fails-show-the-failure-reason-inline-and-automatically-proceed-to-the-next-fallback-strategy-without-blocking-the-user",
+      "title": "Update `frontend/src/pages/ContentGeneratorPage.tsx` to display a multi-stage progress indicator during content extraction that shows the current extraction step in Persian: (1) 'در حال دریافت اطلاعات از لینک…' (Fetching link data), (2) 'در حال تحلیل محتوای صفحه…' (Analyzing page content), (3) 'در حال تولید محتوای سئو…' (Generating SEO content). If a step fails, show the failure reason inline and automatically proceed to the next fallback strategy without blocking the user.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-src-utils-contentgenerator-ts-to-call-the-backend-fetchurl-proxy-via-the-icp-actor-as-the-primary-method-for-fetching-product-page-html-instead-of-relying-solely-on-third-party-cors-proxies-the-actor-call-result-must-be-checked-if-status-is-200-and-body-is-non-empty-use-the-body-for-html-parsing-if-error-is-non-empty-or-status-is-not-200-fall-back-to-the-existing-cors-proxy-chain-the-multi-stage-progress-indicator-steps-already-implemented-must-continue-to-work-with-this-updated-fetch-strategy",
+      "title": "Update `frontend/src/utils/contentGenerator.ts` to call the backend `fetchUrl` proxy (via the ICP actor) as the primary method for fetching product page HTML, instead of relying solely on third-party CORS proxies. The actor call result must be checked: if `status` is 200 and `body` is non-empty, use the body for HTML parsing; if `error` is non-empty or `status` is not 200, fall back to the existing CORS proxy chain. The multi-stage progress indicator steps already implemented must continue to work with this updated fetch strategy.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refactor-the-html-parsing-layer-in-frontend-src-utils-contentgenerator-ts-to-improve-product-data-extraction-accuracy-for-each-supported-parser-digikala-basalam-torob-shylaa-ir-sheypoor-snapp-shop-emalls-amazon-ebay-aliexpress-alibaba-use-more-robust-css-selector-patterns-and-multiple-fallback-selectors-per-field-title-price-description-images-specifications-so-that-minor-html-structure-changes-do-not-result-in-empty-extractions-after-all-site-specific-parsers-are-exhausted-apply-a-generic-content-scoring-pass-score-candidate-text-blocks-by-length-keyword-density-and-proximity-to-price-related-tokens-and-select-the-highest-scoring-block-as-the-product-description-fallback",
+      "title": "Refactor the HTML parsing layer in `frontend/src/utils/contentGenerator.ts` to improve product data extraction accuracy. For each supported parser (Digikala, Basalam, Torob, Shylaa.ir, Sheypoor, Snapp Shop, Emalls, Amazon, eBay, AliExpress, Alibaba), use more robust CSS selector patterns and multiple fallback selectors per field (title, price, description, images, specifications) so that minor HTML structure changes do not result in empty extractions. After all site-specific parsers are exhausted, apply a generic content-scoring pass: score candidate text blocks by length, keyword density, and proximity to price-related tokens, and select the highest-scoring block as the product description fallback.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-frontend-src-utils-contentgenerator-ts-improve-the-post-extraction-seo-content-generation-step-to-better-utilise-all-extracted-product-fields-when-building-the-shylaa-ir-specific-output-specifically-a-if-a-price-was-successfully-extracted-compute-the-sale-price-as-exactly-purchase-price-1-40-and-surface-it-in-the-output-b-if-specifications-were-extracted-integrate-them-verbatim-into-the-product-specifications-section-rather-than-generating-placeholder-text-c-if-images-urls-were-extracted-include-their-count-and-first-url-in-the-structured-result-so-the-admin-can-reference-them-during-product-upload-d-use-the-actual-extracted-product-name-not-a-generic-placeholder-in-every-generated-section-title-description-tags",
+      "title": "In `frontend/src/utils/contentGenerator.ts`, improve the post-extraction SEO content generation step to better utilise all extracted product fields when building the shylaa.ir-specific output. Specifically: (a) if a price was successfully extracted, compute the sale price as exactly purchase price × 1.40 and surface it in the output; (b) if specifications were extracted, integrate them verbatim into the 'Product Specifications' section rather than generating placeholder text; (c) if images URLs were extracted, include their count and first URL in the structured result so the admin can reference them during product upload; (d) use the actual extracted product name — not a generic placeholder — in every generated section (title, description, tags).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-product-upload-helper-panel-to-frontend-src-pages-contentgeneratorpage-tsx-that-appears-after-successful-content-generation-this-panel-summarises-the-extracted-data-in-a-structured-admin-friendly-format-for-uploading-the-product-to-shylaa-ir-product-name-purchase-price-sale-price-1-40-short-description-max-200-characters-full-description-specifications-list-tags-list-and-extracted-image-urls-displayed-as-clickable-links-include-a-copy-all-fields-button-that-copies-all-fields-as-a-structured-plain-text-block-the-admin-can-paste-into-the-site-s-product-upload-form",
+      "title": "Add a 'Product Upload Helper' panel to `frontend/src/pages/ContentGeneratorPage.tsx` that appears after successful content generation. This panel summarises the extracted data in a structured, admin-friendly format for uploading the product to shylaa.ir: product name, purchase price, sale price (× 1.40), short description (max 200 characters), full description, specifications list, tags list, and extracted image URLs (displayed as clickable links). Include a 'Copy All Fields' button that copies all fields as a structured plain-text block the admin can paste into the site's product upload form.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-all-known-runtime-bugs-across-the-content-generator-flow-specifically-a-ensure-the-multi-stage-progress-indicator-in-contentgeneratorpage-tsx-always-resets-to-its-initial-state-after-generation-completes-or-fails-it-must-not-remain-stuck-on-a-mid-step-state-b-ensure-the-cors-proxy-fallback-chain-in-contentgenerator-ts-is-tried-sequentially-and-does-not-silently-swallow-errors-each-proxy-failure-must-be-logged-to-the-progress-indicator-before-trying-the-next-c-ensure-the-history-save-operation-in-usequeries-ts-does-not-overwrite-an-existing-entry-when-regenerating-content-for-the-same-url-it-must-always-create-a-new-history-entry-with-the-current-timestamp-d-ensure-the-copy-buttons-in-contentoutput-tsx-provide-visible-feedback-e-g-button-label-changes-to-copied-for-2-seconds-and-do-not-silently-fail-on-browsers-without-clipboard-api-support",
+      "title": "Audit and fix all known runtime bugs across the content generator flow. Specifically: (a) ensure the multi-stage progress indicator in `ContentGeneratorPage.tsx` always resets to its initial state after generation completes or fails — it must not remain stuck on a mid-step state; (b) ensure the CORS proxy fallback chain in `contentGenerator.ts` is tried sequentially and does not silently swallow errors — each proxy failure must be logged to the progress indicator before trying the next; (c) ensure the history save operation in `useQueries.ts` does not overwrite an existing entry when regenerating content for the same URL — it must always create a new history entry with the current timestamp; (d) ensure the 'Copy' buttons in `ContentOutput.tsx` provide visible feedback (e.g., button label changes to 'Copied!' for 2 seconds) and do not silently fail on browsers without clipboard API support.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-fix-the-settings-page-frontend-src-pages-settingspage-tsx-and-its-associated-hook-frontend-src-hooks-usesettings-ts-so-that-changes-made-by-the-user-dark-mode-toggle-accent-color-font-size-content-preferences-app-behavior-options-are-correctly-saved-to-the-backend-via-the-savesettings-mutation-and-immediately-applied-to-the-dom-without-a-page-reload-specifically-a-verify-the-usesettings-zustand-store-is-initialized-from-the-backend-fetched-settings-on-first-load-b-ensure-the-save-button-triggers-the-backend-mutation-and-updates-both-the-local-zustand-store-and-the-dom-css-variables-atomically-c-confirm-the-backend-updatesettings-actor-call-in-backend-main-mo-correctly-overwrites-and-persists-the-stable-settings-variable-d-ensure-there-is-no-stale-closure-or-state-desync-between-the-form-s-local-state-and-the-zustand-store-that-would-cause-the-ui-to-revert-after-saving",
+      "title": "Investigate and fix the Settings page (`frontend/src/pages/SettingsPage.tsx`) and its associated hook (`frontend/src/hooks/useSettings.ts`) so that changes made by the user (dark mode toggle, accent color, font size, content preferences, app behavior options) are correctly saved to the backend via the `saveSettings` mutation and immediately applied to the DOM without a page reload. Specifically: (a) verify the `useSettings` Zustand store is initialized from the backend-fetched settings on first load; (b) ensure the 'Save' button triggers the backend mutation and updates both the local Zustand store and the DOM CSS variables atomically; (c) confirm the backend `updateSettings` actor call in `backend/main.mo` correctly overwrites and persists the stable settings variable; (d) ensure there is no stale-closure or state-desync between the form's local state and the Zustand store that would cause the UI to revert after saving.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-back-to-home-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-navigates-the-user-back-to-the-home-screen-the-button-must-be-clearly-visible-at-the-top-or-bottom-of-the-content-generator-panel-and-styled-consistently-with-the-existing-luxury-dark-gold-theme",
+      "title": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-clear-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-resets-all-input-fields-url-input-free-text-area-file-uploads-and-clears-the-generated-content-output-area-the-multi-stage-progress-indicator-state-and-any-displayed-error-messages-returning-the-panel-to-its-initial-empty-state-so-the-user-can-immediately-enter-a-new-product-link-and-generate-fresh-content",
+      "title": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Multi-tile home screen with neon rotating color border animation around the screen frame",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Tile 1: Smart content generator - analyze product link, extract info, generate SEO-optimized content for website (Digify format), Instagram, and Ita with platform switcher dropdown and history",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Tile 2: Product management - upload and manage store products",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Tile 3: Affiliate marketing section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Settings tile with gear icon: full UI/functional/content customization with instant save/apply",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Golden Shayla logo from shylaa.ir displayed in the app",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Content generator: structured output with title (SEO), purchase price, sale price (+40%), full description, specs, tags/keywords; copyable section-by-section and all at once",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Content history: all generated content saved and accessible in future sessions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "App optimized for slow Iranian internet speeds, no VPN required",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Animated particle effect transition when entering the main content generation tile",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Content generator must accurately parse and extract content from the provided product URL and generate SEO-optimized output specifically tailored for shylaa.ir",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Content generator must accept and extract content from any type of link or input: any platform, any website, any file type, any app — with no failures or limitations on supported URL/input types",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add a backend HTTP outcall proxy endpoint in `backend/main.mo` that accepts a URL string and returns the raw HTML/text response body. This proxy must handle: (a) standard HTTP GET requests, (b) common redirect chains (follow up to 3 redirects), (c) return a structured result with `status`, `body`, and `error` fields so the frontend can distinguish between a successful fetch, a partial fetch, and a complete failure. This enables the frontend to fetch product pages from any domain without CORS restrictions.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Fix all Motoko compilation errors in `backend/main.mo` that caused the previous deployment failures. Ensure the actor compiles cleanly: remove or simplify any construct that caused type errors, verify all import statements are valid, and confirm the actor builds successfully without trapping at compile time.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add a stable `fetchUrl` HTTP outcall proxy function to `backend/main.mo` that accepts a URL string and returns a record with `status: Nat`, `body: Text`, and `error: Text` fields. The function must: (a) perform a standard HTTP GET request using ICP's `ic.http_request` management canister API, (b) follow up to 3 redirects by inspecting `Location` headers when status is 3xx, (c) return a success result with the response body as text when the request completes, and (d) return a structured error result (with an empty body and descriptive `error` message) on network failure or timeout — never trap. Keep the implementation minimal and straightforward to avoid compilation issues.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Ensure `backend/migration.mo` is updated to remain compatible with the updated `backend/main.mo` actor state shape after the deployment fix. If the actor state fields have changed (e.g., addition of any new stable variables related to the proxy or settings), update the migration module to preserve existing `products`, `affiliates`, and `settings` data while safely initializing any new fields with appropriate default values.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Improve link analysis accuracy and content extraction relevance — extract more precise product-related data from URLs to assist admin with uploading new products to shylaa.ir; test the app for bugs and fix any issues found",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Improve the backend `fetchUrl` proxy in `backend/main.mo` to increase the reliability of HTML retrieval. Increase the `max_response_bytes` limit to at least 500,000 bytes to capture full product pages. Add a `transform` function stub that strips scripts and style tags from the response body before returning it, reducing payload size. Ensure the function never traps on any input and returns a structured error with a descriptive message if the outcall fails.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Ensure `backend/main.mo` compiles cleanly and all stable variable declarations are valid Motoko. Verify that: (a) the `fetchUrl` function signature and return type are consistent with how it is called from the frontend actor hook; (b) all import statements reference valid base library modules; (c) the actor does not use any experimental or deprecated Motoko constructs that cause compilation warnings or errors; (d) update `backend/migration.mo` if any new stable variables were added, preserving existing `products`, `affiliates`, and `settings` data.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Investigate and fix the Settings tile — changes made by the user are not being applied/saved. Debug and fix the settings save/apply flow without affecting other sections.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add a 'Back to Home' button in the Content Generator panel so the user can return to the main tile screen after finishing. Also add a 'Clear' button that resets the input fields and generated output so the user can quickly enter a new link and generate content without reloading the page.",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Shayla",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,64 @@
+{
+  "kind": "build_request",
+  "title": "Add Back to Home and Clear buttons to Content Generator panel",
+  "projectName": "Shayla Content Studio",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-32",
+      "text": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "دکمه بازگشت قرار بده که وقتی کار تمام شد بتوان به صفحه اصلی رفت"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 'Back to Home' (بازگشت به صفحه اصلی) button is visible on the Content Generator page.",
+        "Clicking the button navigates the user to the home screen (`/`) using TanStack Router.",
+        "The button styling matches the existing luxury dark/gold theme and does not interfere with other UI elements."
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "text": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "دکمه پاک کردن هم بزار برای وقتی که چندین لینک قرار است نوشته شود که وقتی محتوای تولید شده یکی را برداشتم و کپی کردم با گزینه پاک کردن بتوانم بسرعت لینک بعد را نوشته و تولید محتوا شود"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 'Clear' (پاک کردن) button is visible on the Content Generator page, positioned near the input area or the generated output.",
+        "Clicking 'Clear' resets the URL input field to empty.",
+        "Clicking 'Clear' resets the free-text input area to empty.",
+        "Clicking 'Clear' removes any uploaded file previews and clears the file input state.",
+        "Clicking 'Clear' removes the generated content output (ContentOutput panel, ProductUploadHelper panel) from view.",
+        "Clicking 'Clear' resets the multi-stage progress indicator to its initial hidden/idle state.",
+        "Clicking 'Clear' removes any displayed error or warning messages.",
+        "After clicking 'Clear', the URL input field receives focus so the user can immediately type a new link.",
+        "The button is styled consistently with the luxury dark/gold theme and is visually distinct from the 'Generate Content' button."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
+    "Navigation must use TanStack Router (already in use), not window.location or manual href redirects.",
+    "The Clear action must not trigger a full page reload — all resets must be in-memory React state updates only."
+  ],
+  "nonGoals": [
+    "Modifying backend logic or data — the Clear action is purely a frontend state reset.",
+    "Adding a confirmation dialog before clearing — the action should be immediate.",
+    "Changing the content generation logic, URL parsing, or SEO output format."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

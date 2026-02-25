@@ -1,0 +1,45 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-a-back-to-home-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-navigates-the-user-back-to-the-home-screen-the-button-must-be-clearly-visible-at-the-top-or-bottom-of-the-content-generator-panel-and-styled-consistently-with-the-existing-luxury-dark-gold-theme",
+      "featureTitle": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+      "files": [
+        "frontend/src/pages/ContentGeneratorPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-32"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-clear-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-resets-all-input-fields-url-input-free-text-area-file-uploads-and-clears-the-generated-content-output-area-the-multi-stage-progress-indicator-state-and-any-displayed-error-messages-returning-the-panel-to-its-initial-empty-state-so-the-user-can-immediately-enter-a-new-product-link-and-generate-fresh-content",
+      "featureTitle": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+      "files": [
+        "frontend/src/pages/ContentGeneratorPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-33"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
