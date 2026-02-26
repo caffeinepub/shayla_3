@@ -1,10 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add "Back to Home" and "Clear" buttons to the Content Generator page to improve navigation and workflow efficiency.
+**Goal:** Replace the header logo in Header.tsx with an animated "Shayla" text that has a carved ivory/wood aesthetic, a 60-second water-fill animation, and a synchronized Web Audio API chime at each cycle's end.
 
 **Planned changes:**
-- Add a "Back to Home" (بازگشت به صفحه اصلی) button on `ContentGeneratorPage` that navigates to `/` using TanStack Router, styled with the luxury dark/gold theme
-- Add a "Clear" (پاک کردن) button on `ContentGeneratorPage` that resets all input fields (URL, free-text, file uploads), clears the generated output panel, resets the multi-stage progress indicator, removes error/warning messages, and focuses the URL input field — all via in-memory React state updates without a page reload
+- Replace the current header logo/text in `Header.tsx` with a "Shayla" text element styled to look carved/engraved into a warm ivory-cream wooden surface using CSS text-shadow and filter effects
+- Add a subtle floating/levitation CSS keyframe animation to the "Shayla" text
+- Implement a water-fill visual effect (SVG clip-path or Canvas overlay) around the "Shayla" text that rises incrementally once per second over 60 seconds, with a wave-like undulating top edge, then resets and repeats
+- Use `requestAnimationFrame` or a second-tick interval to drive the 60-step fill animation smoothly
+- At the end of each 60-second cycle, play a procedurally generated soft chime/bell tone via the Web Audio API (no external audio files), synchronized with the water reset
 
-**User-visible outcome:** Users can quickly navigate back to the home screen from the Content Generator page, and can rapidly clear all inputs and outputs to start generating content for a new product link without reloading the page.
+**User-visible outcome:** The app header displays an animated "Shayla" text with a carved ivory look that bobs gently, is gradually surrounded by rising water over 60 seconds, and plays a soft chime sound when the water completes its fill cycle before resetting.

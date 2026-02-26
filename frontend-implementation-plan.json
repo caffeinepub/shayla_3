@@ -1,43 +1,78 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Back to Home and Clear buttons to Content Generator panel",
+  "title": "Animated 'Shayla' header with water-fill effect and 60-second audio cue",
   "requirements": [
     {
-      "id": "REQ-32",
-      "summary": "Add a 'Back to Home' button in the Content Generator page that navigates to the home screen with TanStack Router",
+      "id": "REQ-1",
+      "summary": "Replace the current header logo/text with an animated 'Shayla' text element that has a floating, wooden/ivory-white carved (engraved) visual style using CSS text-shadow and texture effects",
       "acceptanceCriteria": [
-        "A 'Back to Home' (بازگشت به صفحه اصلی) button is visible on the Content Generator page.",
-        "Clicking the button navigates the user to the home screen (`/`) using TanStack Router.",
-        "The button styling matches the existing luxury dark/gold theme and does not interfere with other UI elements."
+        "The header displays the word 'Shayla' in a carved/engraved style",
+        "The text has an ivory/cream warm-white tone resembling wood or bone material",
+        "The text has a subtle floating/levitation animation (gentle vertical bob using CSS keyframes)",
+        "The engraved effect is visible through layered text-shadow or SVG filter"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ContentGeneratorPage.tsx",
+          "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Add a 'Back to Home' (بازگشت به صفحه اصلی) button near the top or bottom of the Content Generator panel. Import useNavigate from TanStack Router and implement onClick handler that navigates to '/'. Style the button consistently with the luxury dark/gold theme using existing Tailwind classes (e.g., bg-gold-600, hover:bg-gold-700, text-navy-900). Position the button so it does not interfere with existing input fields, generate button, or output areas."
+          "description": "Replace the existing logo/text rendering logic with a new 'Shayla' text element. Apply carved/engraved styling using layered text-shadow (dark inset shadows to create depth) and an ivory/cream color (#FFF8F0 or similar warm white). Add a CSS class that references a floating animation keyframe. Remove or replace the current logo image reference with the styled text element. Keep the existing navigation structure (back button, centered content, right placeholder) intact."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add CSS keyframe animation '@keyframes float' that gently bobs the text vertically (translate Y by 5-10px over 3-4 seconds with ease-in-out). Add a reusable class '.carved-text' with layered text-shadow to create the engraved effect: use multiple shadows with offsets and blur to simulate depth carved into ivory/cream wood. Set the text color to a warm ivory/cream tone. Ensure the animation is smooth and does not degrade performance."
         }
       ]
     },
     {
-      "id": "REQ-33",
-      "summary": "Add a 'Clear' button that resets all input fields, file uploads, generated content output, progress indicator state, and error messages to initial empty state",
+      "id": "REQ-2",
+      "summary": "Add a water-fill animation around the 'Shayla' header text that rises incrementally every second, completing a full 60-second fill cycle before resetting",
       "acceptanceCriteria": [
-        "A 'Clear' (پاک کردن) button is visible on the Content Generator page, positioned near the input area or the generated output.",
-        "Clicking 'Clear' resets the URL input field to empty.",
-        "Clicking 'Clear' resets the free-text input area to empty.",
-        "Clicking 'Clear' removes any uploaded file previews and clears the file input state.",
-        "Clicking 'Clear' removes the generated content output (ContentOutput panel, ProductUploadHelper panel) from view.",
-        "Clicking 'Clear' resets the multi-stage progress indicator to its initial hidden/idle state.",
-        "Clicking 'Clear' removes any displayed error or warning messages.",
-        "After clicking 'Clear', the URL input field receives focus so the user can immediately type a new link.",
-        "The button is styled consistently with the luxury dark/gold theme and is visually distinct from the 'Generate Content' button."
+        "A water-fill visual effect surrounds or overlays the 'Shayla' text",
+        "The water level rises incrementally once per second (60 steps over 60 seconds)",
+        "The water has a wave-like undulating top edge to look realistic",
+        "After 60 seconds the water drains/resets and begins filling again",
+        "The fill animation is smooth and visually distinct each second"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ContentGeneratorPage.tsx",
+          "path": "frontend/src/components/WaterFillAnimation.tsx",
+          "operation": "create",
+          "description": "Create a new React component that renders an SVG or Canvas overlay for the water-fill effect. Use an interval or requestAnimationFrame to increment the water level once per second (60 ticks total). Render a clipping path or mask that fills from bottom to top, with a sine-wave or bezier curve at the top edge to simulate undulating water. Accept props for the current fill percentage and the container dimensions. Use CSS or inline styles to position the water overlay relative to the 'Shayla' text. After 60 seconds, reset the fill percentage to 0 and restart. Ensure the animation is performant and does not block the main thread."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
           "operation": "modify",
-          "description": "Add a 'Clear' (پاک کردن) button positioned near the input area or generated output. Implement a handleClear function that resets all local React state: URL input (empty string), free-text input (empty string), uploaded file state (null or empty), generated content output (null or hidden), multi-stage progress indicator state (reset to initial/idle), and any error/warning message state (empty string or null). After clearing all state, programmatically focus the URL input field using a ref. Style the button to be visually distinct from the 'Generate Content' button (e.g., use a secondary or outline style with gold/navy colors). Ensure the clear action does not trigger a page reload—all resets are in-memory state updates only."
+          "description": "Integrate the WaterFillAnimation component by wrapping or overlaying it on the 'Shayla' text element. Use React state and useEffect to track the current second (0-60) and pass it as a prop to WaterFillAnimation. Increment the second count every 1000ms using setInterval. When the count reaches 60, reset to 0. Position the water animation so it visually surrounds or fills behind/around the text. Ensure the water and text are layered correctly (z-index or CSS positioning)."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Add utility classes or styles for the water-fill animation container and SVG/Canvas elements, including z-index layering to ensure the water appears behind or around the text without obscuring readability. Use a semi-transparent blue or cyan color for the water fill with a subtle gradient or opacity transition. Add any necessary responsive positioning rules to keep the water aligned with the text on different screen sizes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Play a procedurally generated soft chime/bell audio effect via Web Audio API exactly once every 60 seconds, synchronized with the water-fill cycle completion",
+      "acceptanceCriteria": [
+        "A soft chime/bell audio effect plays when the 60-second water fill cycle completes",
+        "The audio is generated via Web Audio API (no external file dependency)",
+        "The sound plays only once per 60-second cycle",
+        "The timer is measured from the last time the sound was played",
+        "The sound and water reset are synchronized — both happen at the same moment"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/utils/audioGenerator.ts",
+          "operation": "create",
+          "description": "Create a utility function 'playChime' that uses the Web Audio API to generate a soft bell or chime tone procedurally. Use an OscillatorNode with a sine wave at a pleasant frequency (e.g., 523 Hz for C5 or 659 Hz for E5), apply an exponential ramp to create an attack and decay envelope, and connect to a GainNode for volume control. The sound should last approximately 1-2 seconds with a gentle fade-out. Return a promise or callback when the sound completes. Ensure the AudioContext is created lazily to avoid autoplay restrictions."
+        },
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Import and call the 'playChime' utility function when the 60-second timer completes (when second count reaches 60 and resets to 0). Ensure the audio playback is synchronized with the water-fill reset so both events happen simultaneously. Handle any browser autoplay restrictions gracefully by checking AudioContext state or catching errors. Do not add user controls for starting/stopping the audio; it should play automatically on cycle completion."
         }
       ]
     }

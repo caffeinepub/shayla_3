@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-back-to-home-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-navigates-the-user-back-to-the-home-screen-the-button-must-be-clearly-visible-at-the-top-or-bottom-of-the-content-generator-panel-and-styled-consistently-with-the-existing-luxury-dark-gold-theme",
-      "featureTitle": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+      "featureId": "feature-replace-the-current-header-logo-text-in-header-tsx-with-an-animated-shayla-text-element-that-has-a-floating-wooden-ivory-white-carved-engraved-visual-style-the-text-should-appear-as-if-it-is-etched-into-a-warm-ivory-cream-wooden-surface-with-appropriate-text-shadow-and-texture-effects-using-css",
+      "featureTitle": "Replace the current header logo/text in Header.tsx with an animated 'Shayla' text element that has a floating, wooden/ivory-white carved (engraved) visual style. The text should appear as if it is etched into a warm ivory/cream wooden surface, with appropriate text-shadow and texture effects using CSS.",
       "files": [
-        "frontend/src/pages/ContentGeneratorPage.tsx"
+        "frontend/src/components/Header.tsx",
+        "frontend/src/index.css"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -17,15 +18,17 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-32"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-clear-button-in-frontend-src-pages-contentgeneratorpage-tsx-that-resets-all-input-fields-url-input-free-text-area-file-uploads-and-clears-the-generated-content-output-area-the-multi-stage-progress-indicator-state-and-any-displayed-error-messages-returning-the-panel-to-its-initial-empty-state-so-the-user-can-immediately-enter-a-new-product-link-and-generate-fresh-content",
-      "featureTitle": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+      "featureId": "feature-add-a-water-fill-animation-around-the-shayla-header-text-every-second-the-water-level-visibly-rises-around-the-text-completing-a-full-fill-cycle-over-60-seconds-implement-this-using-an-svg-clip-path-or-a-canvas-element-overlaid-on-the-text-animating-a-water-wave-that-fills-from-bottom-to-top-over-60-ticks-one-tick-per-second-after-60-seconds-the-fill-resets-to-empty-and-restarts",
+      "featureTitle": "Add a water-fill animation around the 'Shayla' header text. Every second, the water level visibly rises around the text, completing a full fill cycle over 60 seconds. Implement this using an SVG clip-path or a Canvas element overlaid on the text, animating a water wave that fills from bottom to top over 60 ticks (one tick per second). After 60 seconds, the fill resets to empty and restarts.",
       "files": [
-        "frontend/src/pages/ContentGeneratorPage.tsx"
+        "frontend/src/components/Header.tsx",
+        "frontend/src/components/WaterFillAnimation.tsx",
+        "frontend/src/index.css"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -37,7 +40,28 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-33"
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-play-an-audio-sound-effect-in-the-browser-exactly-once-every-60-seconds-timed-to-coincide-with-the-water-completing-a-full-fill-cycle-around-the-shayla-header-text-the-sound-should-evoke-the-passage-of-time-e-g-a-water-drop-chime-or-soft-bell-use-the-web-audio-api-to-generate-a-procedural-tone-soft-bell-chime-so-no-external-audio-file-is-required-the-60-second-timer-resets-after-each-play",
+      "featureTitle": "Play an audio sound effect in the browser exactly once every 60 seconds, timed to coincide with the water completing a full fill cycle around the 'Shayla' header text. The sound should evoke the passage of time (e.g., a water drop, chime, or soft bell). Use the Web Audio API to generate a procedural tone (soft bell/chime) so no external audio file is required. The 60-second timer resets after each play.",
+      "files": [
+        "frontend/src/components/Header.tsx",
+        "frontend/src/utils/audioGenerator.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

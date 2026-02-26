@@ -1,61 +1,81 @@
 {
   "kind": "build_request",
-  "title": "Add Back to Home and Clear buttons to Content Generator panel",
-  "projectName": "Shayla Content Studio",
+  "title": "Animated 'Shayla' header with water-fill effect and 60-second audio cue",
+  "projectName": "Shayla",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-32",
-      "text": "Add a 'Back to Home' button in `frontend/src/pages/ContentGeneratorPage.tsx` that navigates the user back to the home screen (`/`). The button must be clearly visible at the top or bottom of the Content Generator panel and styled consistently with the existing luxury dark/gold theme.",
+      "id": "REQ-1",
+      "text": "Replace the current header logo/text in Header.tsx with an animated 'Shayla' text element that has a floating, wooden/ivory-white carved (engraved) visual style. The text should appear as if it is etched into a warm ivory/cream wooden surface, with appropriate text-shadow and texture effects using CSS.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "دکمه بازگشت قرار بده که وقتی کار تمام شد بتوان به صفحه اصلی رفت"
+          "هدر برنامه را یک shayla حک شود اما بصورت شناور وودنیونی سفید"
         ]
       },
       "acceptanceCriteria": [
-        "A 'Back to Home' (بازگشت به صفحه اصلی) button is visible on the Content Generator page.",
-        "Clicking the button navigates the user to the home screen (`/`) using TanStack Router.",
-        "The button styling matches the existing luxury dark/gold theme and does not interfere with other UI elements."
+        "The header displays the word 'Shayla' in a carved/engraved style",
+        "The text has an ivory/cream warm-white tone resembling wood or bone material",
+        "The text has a subtle floating/levitation animation (gentle vertical bob using CSS keyframes)",
+        "The engraved effect is visible through layered text-shadow or SVG filter"
       ]
     },
     {
-      "id": "REQ-33",
-      "text": "Add a 'Clear' button in `frontend/src/pages/ContentGeneratorPage.tsx` that resets all input fields (URL input, free-text area, file uploads) and clears the generated content output area, the multi-stage progress indicator state, and any displayed error messages — returning the panel to its initial empty state so the user can immediately enter a new product link and generate fresh content.",
+      "id": "REQ-2",
+      "text": "Add a water-fill animation around the 'Shayla' header text. Every second, the water level visibly rises around the text, completing a full fill cycle over 60 seconds. Implement this using an SVG clip-path or a Canvas element overlaid on the text, animating a water wave that fills from bottom to top over 60 ticks (one tick per second). After 60 seconds, the fill resets to empty and restarts.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "دکمه پاک کردن هم بزار برای وقتی که چندین لینک قرار است نوشته شود که وقتی محتوای تولید شده یکی را برداشتم و کپی کردم با گزینه پاک کردن بتوانم بسرعت لینک بعد را نوشته و تولید محتوا شود"
+          "هر ثانیه درحال پر شدن اطراف آن با آب را ببینیم"
         ]
       },
       "acceptanceCriteria": [
-        "A 'Clear' (پاک کردن) button is visible on the Content Generator page, positioned near the input area or the generated output.",
-        "Clicking 'Clear' resets the URL input field to empty.",
-        "Clicking 'Clear' resets the free-text input area to empty.",
-        "Clicking 'Clear' removes any uploaded file previews and clears the file input state.",
-        "Clicking 'Clear' removes the generated content output (ContentOutput panel, ProductUploadHelper panel) from view.",
-        "Clicking 'Clear' resets the multi-stage progress indicator to its initial hidden/idle state.",
-        "Clicking 'Clear' removes any displayed error or warning messages.",
-        "After clicking 'Clear', the URL input field receives focus so the user can immediately type a new link.",
-        "The button is styled consistently with the luxury dark/gold theme and is visually distinct from the 'Generate Content' button."
+        "A water-fill visual effect surrounds or overlays the 'Shayla' text",
+        "The water level rises incrementally once per second (60 steps over 60 seconds)",
+        "The water has a wave-like undulating top edge to look realistic",
+        "After 60 seconds the water drains/resets and begins filling again",
+        "The fill animation is smooth and visually distinct each second"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Play an audio sound effect in the browser exactly once every 60 seconds, timed to coincide with the water completing a full fill cycle around the 'Shayla' header text. The sound should evoke the passage of time (e.g., a water drop, chime, or soft bell). Use the Web Audio API to generate a procedural tone (soft bell/chime) so no external audio file is required. The 60-second timer resets after each play.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "در انتها یک افکت صوتی از گذر زمان پخش شود که یعنی یک دقیقه مساوی با ۶۰ ثانیه گذشته است از آخرین صوت و پرشدن آب در اطراف کلمه"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A soft chime/bell audio effect plays when the 60-second water fill cycle completes",
+        "The audio is generated via Web Audio API (no external file dependency)",
+        "The sound plays only once per 60-second cycle",
+        "The timer is measured from the last time the sound was played",
+        "The sound and water reset are synchronized — both happen at the same moment"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui.",
-    "Navigation must use TanStack Router (already in use), not window.location or manual href redirects.",
-    "The Clear action must not trigger a full page reload — all resets must be in-memory React state updates only."
+    "Do not modify any file under frontend/src/hooks/ (immutable paths)",
+    "Do not modify frontend/src/main.tsx",
+    "Do not modify files under frontend/src/components/ui/",
+    "Audio must be generated via Web Audio API — no external audio file dependencies",
+    "The animation must not degrade performance; use requestAnimationFrame or CSS keyframes"
   ],
   "nonGoals": [
-    "Modifying backend logic or data — the Clear action is purely a frontend state reset.",
-    "Adding a confirmation dialog before clearing — the action should be immediate.",
-    "Changing the content generation logic, URL parsing, or SEO output format."
+    "Changing any backend logic or data models",
+    "Adding user controls to start/stop the animation or audio",
+    "Changing the navigation or routing behavior of the header",
+    "Loading external fonts, textures, or audio files from a CDN"
   ],
   "imageRequirements": {
     "required": [],

@@ -127,7 +127,7 @@ export default function ContentGeneratorPage() {
               onClick={() => navigate({ to: '/' })}
               className="gap-2 text-sm border-gold/30 text-gold hover:bg-gold/10 hover:text-gold hover:border-gold/60"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 text-gold" />
               <span>بازگشت به صفحه اصلی</span>
             </Button>
           </div>
@@ -175,10 +175,10 @@ export default function ContentGeneratorPage() {
             <Button
               variant="outline"
               onClick={handleClear}
-              className="gap-2 shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/70"
+              className="gap-2 shrink-0 border-gold/30 text-gold hover:bg-gold/10 hover:text-gold-light hover:border-gold/60"
               title="پاک کردن همه چیز"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4 text-gold" />
               <span className="hidden sm:inline">پاک کردن</span>
             </Button>
           )}
