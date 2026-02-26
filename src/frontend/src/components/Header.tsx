@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import WaterFillAnimation from './WaterFillAnimation';
-import { playChime, playTick } from '../utils/audioGenerator';
 
 const CYCLE_SECONDS = 60;
 const LOGO_WIDTH = 260;
@@ -18,25 +17,6 @@ export default function Header() {
   // Track current second in the 60-second cycle
   const [second, setSecond] = useState(0);
   const secondRef = useRef(0);
-  const audioUnlockedRef = useRef(false);
-
-  // Unlock audio context on first user interaction
-  const unlockAudio = useCallback(() => {
-    if (!audioUnlockedRef.current) {
-      audioUnlockedRef.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('click', unlockAudio, { once: true });
-    window.addEventListener('touchstart', unlockAudio, { once: true });
-    window.addEventListener('keydown', unlockAudio, { once: true });
-    return () => {
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-    };
-  }, [unlockAudio]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,15 +24,6 @@ export default function Header() {
 
       if (secondRef.current >= CYCLE_SECONDS) {
         secondRef.current = 0;
-        // Play chime synchronized with water reset
-        if (audioUnlockedRef.current) {
-          playChime();
-        }
-      } else {
-        // Soft background tick every second
-        if (audioUnlockedRef.current) {
-          playTick(secondRef.current % 2 === 0);
-        }
       }
 
       setSecond(secondRef.current);

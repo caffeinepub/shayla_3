@@ -101,6 +101,7 @@ export default function HomePage() {
       <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-2xl px-2">
         {tiles.map((tile) => (
           <button
+            type="button"
             key={tile.id}
             onClick={(e) => handleTileClick(tile, e)}
             className={`tile-card group relative flex flex-col items-center justify-center gap-3 p-6 md:p-8 rounded-2xl border transition-all duration-300 cursor-pointer text-center
@@ -116,16 +117,16 @@ export default function HomePage() {
             )}
 
             {/* Icon */}
-            <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+            <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center">
               {!imgErrors[tile.id] ? (
                 <img
                   src={tile.icon}
                   alt={tile.title}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 tile-icon-glow"
                   onError={() => setImgErrors((prev) => ({ ...prev, [tile.id]: true }))}
                 />
               ) : (
-                <div className="group-hover:scale-110 transition-transform duration-300">
+                <div className="group-hover:scale-110 transition-transform duration-300 tile-icon-glow">
                   {tile.fallbackIcon}
                 </div>
               )}

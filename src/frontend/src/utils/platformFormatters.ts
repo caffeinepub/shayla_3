@@ -28,7 +28,10 @@ export function formatForWebsite(content: GeneratedContent): FormattedContent {
   const productName = productData.title || 'محصول';
   const salePriceCalc = purchasePrice > 0 ? Math.round(purchasePrice * 1.4) : salePrice;
 
-  const metaDescription = shortDescription || description.substring(0, 160);
+  // Build meta description from actual product data
+  const rawDesc = description || shortDescription || '';
+  const cleanDesc = rawDesc.replace(/https?:\/\/\S+/g, '').replace(/\s{3,}/g, ' ').trim();
+  const metaDescription = cleanDesc.substring(0, 160) || `خرید ${productName} با بهترین قیمت و کیفیت تضمین‌شده در فروشگاه شیلا`;
 
   const specsHtml = specs
     ? specs.split('\n').filter(Boolean).map(s => `<li>${s}</li>`).join('\n')
@@ -55,12 +58,12 @@ export function formatForWebsite(content: GeneratedContent): FormattedContent {
       },
       {
         title: 'توضیح کوتاه محصول',
-        content: shortDescription || description.substring(0, 200),
+        content: shortDescription || cleanDesc.substring(0, 200) || `${productName} با کیفیت عالی در فروشگاه شیلا موجود است.`,
         copyable: true,
       },
       {
         title: 'توضیح کامل محصول',
-        content: description || `${productName} با کیفیت عالی در فروشگاه شیلا موجود است.`,
+        content: cleanDesc || `${productName} با کیفیت عالی در فروشگاه شیلا موجود است. برای خرید با ضمانت اصالت کالا و ارسال سریع به سراسر ایران به shylaa.ir مراجعه کنید.`,
         copyable: true,
       },
       {
@@ -97,26 +100,31 @@ export function formatForWebsite(content: GeneratedContent): FormattedContent {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
   <meta name="description" content="${metaDescription}">
+  <meta name="keywords" content="${tags.join(', ')}">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${metaDescription}">
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="فروشگاه شیلا">
   ${images[0] ? `<meta property="og:image" content="${images[0]}">` : ''}
+  <link rel="canonical" href="https://shylaa.ir/product/${productName.replace(/\s+/g, '-')}">
 </head>
 <body>
-  <article class="product-page">
-    <h1>${productName}</h1>
+  <article class="product-page" itemscope itemtype="https://schema.org/Product">
+    <h1 itemprop="name">${productName}</h1>
     <div class="product-images">
       ${imagesHtml}
     </div>
-    <div class="product-price">
-      <span class="sale-price">${formatPrice(salePriceCalc)}</span>
+    <div class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <span class="sale-price" itemprop="price" content="${salePriceCalc}">${formatPrice(salePriceCalc)}</span>
+      <meta itemprop="priceCurrency" content="IRR">
       ${purchasePrice > 0 ? `<span class="purchase-price">${formatPrice(purchasePrice)}</span>` : ''}
     </div>
-    <div class="product-short-desc">
-      <p>${shortDescription || description.substring(0, 200)}</p>
+    <div class="product-short-desc" itemprop="description">
+      <p>${shortDescription || cleanDesc.substring(0, 200)}</p>
     </div>
     <div class="product-description">
       <h2>توضیحات محصول</h2>
-      <p>${description || `${productName} با کیفیت عالی در فروشگاه شیلا موجود است.`}</p>
+      <p>${cleanDesc || `${productName} با کیفیت عالی در فروشگاه شیلا موجود است.`}</p>
     </div>
     <div class="product-specs">
       <h2>مشخصات فنی</h2>

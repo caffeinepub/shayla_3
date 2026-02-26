@@ -33,13 +33,31 @@ const CORS_PROXIES = [
 
 export type ProgressCallback = (step: number, message: string, detail?: string) => void;
 
+// Helper: try to extract raw text from a fetch response (handles JSON wrappers from proxies)
+async function extractTextFromResponse(response: Response): Promise<string> {
+  // Try JSON first (allorigins format)
+  try {
+    const clone = response.clone();
+    const data = await clone.json();
+    if (data && data.contents && data.contents.length > 200) {
+      return data.contents;
+    }
+    // Some proxies wrap differently
+    if (data && data.body && data.body.length > 200) return data.body;
+    if (data && data.data && data.data.length > 200) return data.data;
+  } catch (_) { /* not JSON */ }
+  // Fallback: plain text
+  const text = await response.text().catch(() => '');
+  return text;
+}
+
 // Fetch URL with multiple CORS proxy fallbacks
 async function fetchWithProxies(
   url: string,
   actor: any,
   onProgress?: ProgressCallback
 ): Promise<string> {
-  // First try backend actor
+  // First try backend actor (ICP canister can make HTTP calls without CORS issues)
   if (actor) {
     try {
       onProgress?.(1, 'دریافت اطلاعات', 'در حال اتصال از طریق سرور...');
@@ -52,6 +70,22 @@ async function fetchWithProxies(
     }
   }
 
+  // For Eitaa: also try their embed/preview endpoint which returns more data
+  const isEitaa = url.includes('eitaa.com');
+  if (isEitaa) {
+    // Try Eitaa's own embed endpoint
+    try {
+      const embedUrl = `https://eitaa.com/embed${new URL(url).pathname}`;
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(embedUrl)}`;
+      onProgress?.(1, 'دریافت اطلاعات', 'تلاش با endpoint ایتا...');
+      const response = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
+      if (response.ok) {
+        const text = await extractTextFromResponse(response);
+        if (text && text.length > 200) return text;
+      }
+    } catch (_) { /* skip */ }
+  }
+
   // Try each CORS proxy sequentially
   for (let i = 0; i < CORS_PROXIES.length; i++) {
     const proxyUrl = CORS_PROXIES[i](url);
@@ -61,6 +95,7 @@ async function fetchWithProxies(
         headers: {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language': 'fa,en;q=0.5',
+          'User-Agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
         },
         signal: AbortSignal.timeout(15000),
       });
@@ -70,13 +105,8 @@ async function fetchWithProxies(
         continue;
       }
 
-      const data = await response.json().catch(() => null);
-      if (data && data.contents && data.contents.length > 500) {
-        return data.contents;
-      }
-
-      const text = await response.text().catch(() => '');
-      if (text && text.length > 500) {
+      const text = await extractTextFromResponse(response);
+      if (text && text.length > 300) {
         return text;
       }
 
@@ -167,14 +197,294 @@ function parsePrice(priceStr: string): number {
   return isNaN(num) ? 0 : num;
 }
 
+// Helper: extract Open Graph and JSON-LD structured data
+function extractOGData(html: string): Partial<ProductData> {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content')?.trim() || '';
+  const ogDesc = doc.querySelector('meta[property="og:description"]')?.getAttribute('content')?.trim() || '';
+  const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')?.trim() || '';
+
+  let jsonLdTitle = '';
+  let jsonLdDesc = '';
+  let jsonLdImage = '';
+  let jsonLdPrice = 0;
+
+  // Parse JSON-LD structured data
+  const jsonLdScripts = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
+  for (const script of jsonLdScripts) {
+    try {
+      const data = JSON.parse(script.textContent || '');
+      const types = ['Product', 'Article', 'WebPage', 'ItemPage'];
+      const items = Array.isArray(data) ? data : [data];
+      for (const item of items) {
+        if (types.some(t => (item['@type'] || '').includes(t))) {
+          jsonLdTitle = item.name || item.headline || '';
+          jsonLdDesc = item.description || '';
+          if (item.image) {
+            jsonLdImage = typeof item.image === 'string' ? item.image
+              : Array.isArray(item.image) ? item.image[0]
+              : item.image?.url || '';
+          }
+          if (item.offers) {
+            const offer = Array.isArray(item.offers) ? item.offers[0] : item.offers;
+            jsonLdPrice = parsePrice(String(offer?.price || '0'));
+          }
+          if (jsonLdTitle) break;
+        }
+      }
+    } catch (_) {
+      // skip malformed JSON-LD
+    }
+  }
+
+  const title = ogTitle || jsonLdTitle;
+  const description = ogDesc || jsonLdDesc;
+  const images = ogImage ? [ogImage] : (jsonLdImage ? [jsonLdImage] : []);
+  const price = jsonLdPrice;
+
+  return { title, description, images, price };
+}
+
+// Extract product info from raw post text (for messaging apps like Eitaa/Telegram)
+function extractProductFromPostText(text: string): { title: string; price: number; description: string; specs: string[] } {
+  if (!text) return { title: '', price: 0, description: '', specs: [] };
+
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+
+  // Extract price from text
+  let price = 0;
+  const pricePatterns = [
+    /قیمت[:\s]*([۰-۹\d][۰-۹\d,،٬\s]*)\s*(تومان|ریال|هزار\s*تومان)/i,
+    /([۰-۹\d][۰-۹\d,،٬]+)\s*(تومان|ریال)/i,
+    /price[:\s]*([\d,]+)/i,
+  ];
+  for (const pat of pricePatterns) {
+    const m = text.match(pat);
+    if (m) {
+      price = parsePrice(m[1]);
+      // If "هزار تومان" multiply by 1000
+      if (m[2]?.includes('هزار')) price *= 1000;
+      if (price > 0) break;
+    }
+  }
+
+  // Find title: first meaningful non-emoji, non-price line
+  let title = '';
+  for (const line of lines) {
+    const clean = line.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').replace(/[#@]+/g, '').trim();
+    if (clean.length > 5 && clean.length < 150 && !clean.match(/\d+\s*(تومان|ریال)/)) {
+      title = clean;
+      break;
+    }
+  }
+
+  // Extract specs: lines that look like key:value
+  const specs: string[] = [];
+  for (const line of lines) {
+    if (line.includes(':') || line.includes('\u2022') || line.includes('\u2705') || line.includes('\u25AA')) {
+      const clean = line.replace(/[\u2705\u25AA\u2022]/g, '').trim();
+      if (clean.length > 5 && clean.length < 200) {
+        specs.push(clean);
+      }
+    }
+  }
+
+  // Full text as description
+  const description = text.length > 20 ? text : '';
+
+  return { title, price, description, specs };
+}
+
+// Eitaa parser — extracts post body text not just channel name
+function parseEitaa(html: string): Partial<ProductData> {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  // Try OG tags
+  const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content')?.trim() || '';
+  const ogDesc = doc.querySelector('meta[property="og:description"]')?.getAttribute('content')?.trim() || '';
+  const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')?.trim() || '';
+
+  // --- Strategy 1: Try to find the actual post text in <script> tags (JSON data)
+  let postBody = '';
+  const scripts = Array.from(doc.querySelectorAll('script'));
+  for (const script of scripts) {
+    const src = script.textContent || '';
+    // Look for message content patterns in JS bundles
+    const msgPatterns = [
+      /"text"\s*:\s*"([^"]{20,}?)"/,
+      /"message"\s*:\s*"([^"]{20,}?)"/,
+      /"caption"\s*:\s*"([^"]{20,}?)"/,
+      /'text'\s*:\s*'([^']{20,}?)'/,
+    ];
+    for (const pat of msgPatterns) {
+      const m = src.match(pat);
+      if (m && m[1]) {
+        const decoded = m[1].replace(/\\n/g, '\n').replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
+          String.fromCharCode(parseInt(hex, 16))
+        );
+        if (decoded.length > 20) {
+          postBody = decoded;
+          break;
+        }
+      }
+    }
+    if (postBody) break;
+  }
+
+  // --- Strategy 2: Try DOM selectors for post body
+  if (!postBody) {
+    const postBodySelectors = [
+      '.message-text',
+      '[class*="message-text"]',
+      '[class*="post-text"]',
+      '[class*="msg-text"]',
+      '.post-content',
+      '[class*="post-content"]',
+      '[class*="post-body"]',
+      '.channel-post-content',
+      '.tgme_widget_message_text',
+      // Eitaa specific
+      '[class*="eitaa"]',
+      '[class*="channel"]',
+      'main article',
+      'main p',
+    ];
+
+    for (const sel of postBodySelectors) {
+      try {
+        const el = doc.querySelector(sel);
+        if (el) {
+          const text = el.textContent?.trim() || '';
+          if (text.length > 20) {
+            postBody = text;
+            break;
+          }
+        }
+      } catch (_) { /* skip */ }
+    }
+  }
+
+  // --- Strategy 3: Extract from OG description if it has real product data
+  if (!postBody && ogDesc && ogDesc.length > 20) {
+    // OG desc for Eitaa posts sometimes has partial post text
+    postBody = ogDesc;
+  }
+
+  // --- Strategy 4: Extract from all paragraph text, scored by relevance
+  if (!postBody) {
+    const allText = Array.from(doc.querySelectorAll('p, div, span'))
+      .map(el => el.textContent?.trim() || '')
+      .filter(t => t.length > 30)
+      .sort((a, b) => {
+        // Score by product-related keywords
+        const keywords = ['تومان', 'قیمت', 'پارچه', 'جنس', 'رنگ', 'سایز', 'متر', 'کیلو', 'خرید'];
+        const scoreA = keywords.filter(k => a.includes(k)).length;
+        const scoreB = keywords.filter(k => b.includes(k)).length;
+        return scoreB - scoreA;
+      });
+    if (allText.length > 0 && allText[0].length > 20) {
+      postBody = allText[0];
+    }
+  }
+
+  // Extract product info from post body
+  const extracted = extractProductFromPostText(postBody);
+
+  // Title logic: if OG title is just the channel name (short, no product info), prefer extracted title
+  let title = '';
+  if (extracted.title && extracted.title.length > 5) {
+    title = extracted.title;
+  } else if (ogTitle && ogTitle.length > 3) {
+    title = ogTitle;
+  }
+
+  // Collect images: OG image + any images found in post
+  const images: string[] = [];
+  if (ogImage) images.push(ogImage);
+  // Also scan for any image URLs in the HTML
+  const imgEls = doc.querySelectorAll('img[src*="http"]');
+  imgEls.forEach(img => {
+    const src = img.getAttribute('src') || '';
+    if (src && !images.includes(src) && !src.includes('avatar') && !src.includes('icon')) {
+      images.push(src);
+    }
+  });
+
+  return {
+    title,
+    description: extracted.description || postBody || ogDesc,
+    price: extracted.price,
+    specs: extracted.specs,
+    images: images.slice(0, 8),
+  };
+}
+
+// Telegram parser
+function parseTelegram(html: string): Partial<ProductData> {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content')?.trim() || '';
+  const ogDesc = doc.querySelector('meta[property="og:description"]')?.getAttribute('content')?.trim() || '';
+  const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')?.trim() || '';
+
+  // Try post body selectors
+  let postBody = '';
+  const msgSelectors = ['.tgme_widget_message_text', '.message', '[class*="message-text"]'];
+  for (const sel of msgSelectors) {
+    try {
+      const el = doc.querySelector(sel);
+      if (el) {
+        const text = el.textContent?.trim() || '';
+        if (text.length > 10) { postBody = text; break; }
+      }
+    } catch (_) { /* skip */ }
+  }
+
+  return {
+    title: ogTitle,
+    description: postBody || ogDesc,
+    images: ogImage ? [ogImage] : [],
+  };
+}
+
+// Instagram parser
+function parseInstagram(html: string): Partial<ProductData> {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content')?.trim() || '';
+  const ogDesc = doc.querySelector('meta[property="og:description"]')?.getAttribute('content')?.trim() || '';
+  const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content')?.trim() || '';
+
+  return {
+    title: ogTitle,
+    description: ogDesc,
+    images: ogImage ? [ogImage] : [],
+  };
+}
+
 // Generic content scoring algorithm
 function genericContentScore(html: string): { description: string; title: string; price: number } {
+  // First try OG/JSON-LD data — it's the most reliable signal
+  const ogData = extractOGData(html);
+  if (ogData.title && ogData.title.length > 3 && ogData.description && ogData.description.length > 20) {
+    return {
+      title: ogData.title,
+      description: ogData.description,
+      price: ogData.price || 0,
+    };
+  }
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
 
   // Remove noise elements
   ['script', 'style', 'nav', 'header', 'footer', 'aside', 'iframe', 'noscript'].forEach(tag => {
-    doc.querySelectorAll(tag).forEach(el => el.remove());
+    Array.from(doc.querySelectorAll(tag)).forEach(el => { el.remove(); });
   });
 
   // Score title candidates
@@ -748,6 +1058,15 @@ function detectAndParse(url: string, html: string): ProductData {
       partial = parseAlibaba(html);
     } else if (hostname.includes('emalls')) {
       partial = parseEmalls(html);
+    } else if (hostname.includes('eitaa.com') || hostname.includes('eitaa')) {
+      partial = parseEitaa(html);
+    } else if (hostname.includes('t.me') || hostname.includes('telegram')) {
+      partial = parseTelegram(html);
+    } else if (hostname.includes('instagram')) {
+      partial = parseInstagram(html);
+    } else {
+      // For unknown platforms, try OG data as primary source
+      partial = extractOGData(html);
     }
   } catch (_) {
     // URL parse failed
@@ -798,24 +1117,67 @@ function extractTitleFromUrl(url: string): string {
 // Generate relevant tags
 function generateTags(title: string, description: string, brand: string, category: string): string[] {
   const tags: string[] = [];
-  const combined = `${title} ${description} ${brand} ${category}`.toLowerCase();
 
   // Add brand if available
-  if (brand && brand.length > 1) tags.push(brand);
+  if (brand && brand.length > 1 && !tags.includes(brand)) tags.push(brand);
 
   // Extract meaningful words from title
-  const titleWords = title.split(/\s+/).filter(w => w.length > 2);
-  titleWords.slice(0, 5).forEach(w => {
+  const titleWords = title.split(/\s+/).filter(w => w.length > 2 && !w.match(/^\d+$/));
+  titleWords.slice(0, 6).forEach(w => {
     if (!tags.includes(w)) tags.push(w);
   });
 
+  // Extract meaningful words from description if title is sparse
+  if (tags.length < 4 && description) {
+    const descWords = description.split(/\s+/).filter(w => w.length > 3 && !w.match(/^\d+$/) && !w.includes('http'));
+    descWords.slice(0, 4).forEach(w => {
+      if (!tags.includes(w)) tags.push(w);
+    });
+  }
+
+  // Category-based keywords
+  if (category) {
+    const catWords = category.split(/\s+/).filter(w => w.length > 2);
+    catWords.slice(0, 2).forEach(w => {
+      if (!tags.includes(w)) tags.push(w);
+    });
+  }
+
   // Common product keywords
-  const keywords = ['خرید', 'قیمت', 'اصل', 'اورجینال', 'شیلا', 'shylaa'];
+  const keywords = ['خرید', 'شیلا', 'shylaa', 'فروشگاه_شیلا'];
   keywords.forEach(kw => {
     if (!tags.includes(kw)) tags.push(kw);
   });
 
-  return tags.slice(0, 10);
+  return tags.slice(0, 12);
+}
+
+// Build a rich SEO description from product data
+function buildSEODescription(productData: ProductData): string {
+  const { title, description, specs, brand, category } = productData;
+
+  if (description && description.length > 50) {
+    // Clean up the description — remove URLs and excessive whitespace
+    return description
+      .replace(/https?:\/\/\S+/g, '')
+      .replace(/\s{3,}/g, '\n\n')
+      .trim();
+  }
+
+  // Build from specs if description is empty
+  if (specs && specs.length > 0) {
+    const parts: string[] = [];
+    if (title) parts.push(`${title} یکی از محصولات باکیفیت موجود در فروشگاه شیلا است.`);
+    parts.push('\nمشخصات:\n' + specs.slice(0, 5).join('\n'));
+    return parts.join('\n');
+  }
+
+  // Minimal fallback
+  if (title && title.length > 5) {
+    return `${title} با کیفیت عالی و قیمت مناسب در فروشگاه شیلا موجود است. برای خرید با ضمانت اصالت و ارسال سریع به سراسر ایران به shylaa.ir مراجعه کنید.`;
+  }
+
+  return 'محصول با کیفیت عالی در فروشگاه شیلا موجود است.';
 }
 
 // Main export: generate content from URL
@@ -863,22 +1225,26 @@ export async function generateContentFromUrl(
     ? productData.specs.join('\n')
     : '';
 
-  // Short description (max 200 chars)
-  const shortDescription = productData.description.length > 200
-    ? productData.description.substring(0, 197) + '...'
-    : productData.description;
+  // Build SEO-optimized description
+  const seoDescription = buildSEODescription(productData);
 
-  // SEO title
-  const seoTitle = productData.title
-    ? `خرید ${productData.title} | شیلا`
-    : 'محصول جدید | شیلا';
+  // Short description (max 200 chars)
+  const shortDescription = seoDescription.length > 200
+    ? seoDescription.substring(0, 197) + '...'
+    : seoDescription;
+
+  // SEO title — use actual product title, not generic
+  const productName = productData.title && productData.title.length > 3 ? productData.title : null;
+  const seoTitle = productName
+    ? `خرید ${productName} | فروشگاه شیلا`
+    : 'محصول جدید | فروشگاه شیلا';
 
   return {
     productData,
     title: seoTitle,
     purchasePrice,
     salePrice,
-    description: productData.description,
+    description: seoDescription,
     specs: specsString,
     tags: productData.tags,
     images: productData.images,
